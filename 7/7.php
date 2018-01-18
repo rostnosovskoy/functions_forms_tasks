@@ -21,25 +21,8 @@
     <h2 title="This is guestbook create for everyone">Guestbook</h2>
 </div>
 
-
-<div class="container">
-    <form action="7.php" method="post">
-        <div class="form-group">
-            <lable for = "name">Enter your name:</lable>
-            <input type="text" name="name" placeholder="Name.." title="You must enter your name here" class="form-control" />
-            <lable for = "msg">Enter your messase:</lable>
-            <textarea name="msg" rows="5" cols="120" placeholder="Message.." class="form-control" title="Write here your message, please."></textarea>
-        </div>
-        <button type="submit" name="sendMsg" class="btn btn-success">Publish</button>
-    </form>
-</div>
-
 <div>
     <?php
-    if ($_SERVER['REQUEST_METHOD'] != 'POST')
-    {
-        return;
-    }
     //-------------------------------Replace spesial haracters-------------------------
     function repText($txtMsg)
     {
@@ -91,7 +74,17 @@ function mainFun()
     return $linesArray;
 }
 ?>
-
+<div class="container">
+    <form action="7.php" method="post">
+        <div class="form-group">
+            <lable for = "name">Enter your name:</lable>
+            <input type="text" name="name" placeholder="Name.." title="You must enter your name here" class="form-control" />
+            <lable for = "msg">Enter your messase:</lable>
+            <textarea name="msg" rows="5" cols="120" placeholder="Message.." class="form-control" title="Write here your message, please."></textarea>
+        </div>
+        <button type="submit" name="sendMsg" class="btn btn-success">Publish</button>
+    </form>
+</div>
 
 </body>
 </html>

@@ -25,72 +25,69 @@
 <div>
     <h2 title="This is guestbook create for everyone">Guestbook</h2>
 </div>
-
+<div>
 <?php
-if ($_SERVER['REQUEST_METHOD'] != 'POST')
-{
-    return;
-}
-//-------------------------------Replace spesial haracters-------------------------
-function repText($txtMsg)
-{
-    $txtMsg = strip_tags($txtMsg, "<b>"); //---------Delete html tags--------------
-    return str_replace(array("\n", "\r\n", "\t"), array("<br />", "<br />",
-        "&nbsp; &nbsp; &nbsp;"), htmlspecialchars(trim($txtMsg)));
-}
-
-//---------------------------------------------------------------------------------
-
-if (array_key_exists('msg', $_POST)) { //-------- Check the send form info-----------
-    if (trim($_POST['name']) == '') { //-------If name is empty then ---------------
-        $_POST['name'] = 'Anonymous'; //--------default name is anonimous-------------
+    //-------------------------------Replace spesial haracters-------------------------
+    function repText($txtMsg)
+    {
+        $txtMsg = strip_tags($txtMsg, "<b>"); //---------Delete html tags--------------
+        return str_replace(array("\n", "\r\n", "\t"), array("<br />", "<br />",
+            "&nbsp; &nbsp; &nbsp;"), htmlspecialchars(trim($txtMsg)));
     }
-    //----------------Check the message. If message is empty then exit from program ---------------
-    if (trim($_POST['msg']) == '') {
-        echo "You forgot enter message. Try again.";
-        exit();
-    }
-    //----------------------------------------------------------------------------------------------
 
-    $fw = file('forbiddenWords.txt'); //-------Get forbidden word from file-------------
+    //---------------------------------------------------------------------------------
 
-    //---------------------------------Check each forbidden word is in text or not---------------------------
-    foreach ($fw as $item) {
-        if (@mb_strstr($_POST['msg'], trim($item)))
-        {
-            $_POST['msg'] = "Некорректный комментарий";
+    if (array_key_exists('msg', $_POST)) { //-------- Check the send form info-----------
+        if (trim($_POST['name']) == '') { //-------If name is empty then ---------------
+            $_POST['name'] = 'Anonymous'; //--------default name is anonimous-------------
         }
+        //----------------Check the message. If message is empty then exit from program ---------------
+        if (trim($_POST['msg']) == '') {
+            echo "You forgot enter message. Try again.";
+            exit();
+        }
+        //----------------------------------------------------------------------------------------------
+
+        $fw = file('forbiddenWords.txt'); //-------Get forbidden word from file-------------
+
+        //---------------------------------Check each forbidden word is in text or not---------------------------
+        foreach ($fw as $item) {
+            if (@mb_strstr($_POST['msg'], trim($item)))
+            {
+                $_POST['msg'] = "Некорректный комментарий";
+            }
+        }
+        //----------------------------------------------------------------------------------------------
+
+
+        $name = $_POST['name'];
+        $msg = $_POST['msg'];
+        date_default_timezone_set('Europe/Riga'); //-------Set timezone for Kyev---------------
+        $postDate = date('D, d m Y H:i:s'); //------------Set date format---------------------
+
+        //------------------Set format record to file------------------------------------------------------------
+        $userMsg = sprintf("\n<b> %s </b> <i> %s </i><br /> %s <hr>", trim($name), $postDate, repText($msg));
+        //-------------------------------------------------------------------------------------------------------
+        //------------------------Wite data to file. Flag FILE_APPEND use for add data and don't rewite date to file------
+        file_put_contents('baseForGuestBook.txt', $userMsg, FILE_APPEND);
+        //-------------------------------------------------------------------------------------------------------
+
     }
-    //----------------------------------------------------------------------------------------------
 
+    //-----------------Create array where every line from file is array element------------------------------------------
+    $linesArray = file('baseForGuestBook.txt', FILE_SKIP_EMPTY_LINES);
+    //--------------------------------------------------------------------------------------------------------------
 
-    $name = $_POST['name'];
-    $msg = $_POST['msg'];
-    date_default_timezone_set('Europe/Riga'); //-------Set timezone for Kyev---------------
-    $postDate = date('D, d m Y H:i:s'); //------------Set date format---------------------
+    ksort($linesArray); //-------------------------Sort array by key in reverse order-------------------------------
 
-    //------------------Set format record to file------------------------------------------------------------
-    $userMsg = sprintf("\n<b> %s </b> <i> %s </i><br /> %s <hr>", trim($name), $postDate, repText($msg));
-    //-------------------------------------------------------------------------------------------------------
-    //------------------------Wite data to file. Flag FILE_APPEND use for add data and don't rewite date to file------
-    file_put_contents('baseForGuestBook.txt', $userMsg, FILE_APPEND);
-    //-------------------------------------------------------------------------------------------------------
-
-}
-
-//-----------------Create array where every line from file is array element------------------------------------------
-$linesArray = file('baseForGuestBook.txt', FILE_SKIP_EMPTY_LINES);
-//--------------------------------------------------------------------------------------------------------------
-
-ksort($linesArray); //-------------------------Sort array by key in reverse order-------------------------------
-
-echo "<hr>"; //--------------Horizontal line will separate each array element -----------------------------------
-//-----------------------------------------Print array-----------------------------------------------------------
-foreach ($linesArray as $item) {
-    echo "{$item} <br />";
-}
-//--------------------------------------------------------------------------------------------------------------
-?>
+    echo "<hr>"; //--------------Horizontal line will separate each array element -----------------------------------
+    //-----------------------------------------Print array-----------------------------------------------------------
+    foreach ($linesArray as $item) {
+        echo "{$item} <br />";
+    }
+    //--------------------------------------------------------------------------------------------------------------
+    ?>
+</div>
 
 <div class="container">
     <form action="8.php" method="post">
