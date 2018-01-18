@@ -1,0 +1,16 @@
+h2 {
+    text-align: center;
+    color: darkslateblue;
+    font-style: normal;
+    font-size: 44px;
+    font-weight: bold;
+    font-family: Arial;
+    border-bottom: 1px solid #cccccc;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+body {
+    margin-left: 50px;
+    margin-right: 50px;
+}
